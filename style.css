@@ -1,0 +1,153 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap");
+
+:root {
+  --font-primary: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  --color-bg: #eff7fc;
+  --color-card: #ffffff;
+  --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
+  --color-column-header-bg: #eff6ff;
+  --color-text: #1e293b;
+  --color-text-subtle: #94a3b8;
+
+  --margin-none: 0;
+  --padding-none: 0;
+
+  /* Standard Font, Padding, Margin Sizes */
+
+  --base: 1rem; /* 16px */
+
+  --fs-h1: 2.5rem; /* 40px */
+  --fs-h2: 2rem; /* 32px */
+  --fs-h3: 1.75rem; /* 28px */
+  --fs-h4: 1.5rem; /* 24px */
+  --fs-h5: 1.25rem; /* 20px */
+  --fs-h6: 1rem; /* 16px */
+
+  /* text */
+  --medium: 0.875rem; /* 14px */
+  --small: 0.5rem; /* 8px */
+
+  --fs-label: 0.75rem; /* 12px */
+  --fs-caption: 0.75rem; /* 12px */
+
+  --rounded: 1.5rem; /* 6px */
+}
+
+* {
+  box-sizing: border-box;
+  margin: var(--margin-none);
+  padding: var(--padding-none);
+}
+
+html {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+h1 {
+  font-size: var(--fs-h1);
+}
+h2 {
+  font-size: var(--fs-h2);
+}
+h3 {
+  font-size: var(--fs-h3);
+}
+h4 {
+  font-size: var(--fs-h4);
+}
+h5 {
+  font-size: var(--fs-h5);
+}
+h6 {
+  font-size: var(--fs-h6);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-mono);
+}
+
+span,
+p,
+label {
+  font-size: var(--fs-body);
+}
+
+button {
+  display: flex;
+  font-family: var(--font-primary);
+  font-size: var(--body);
+  background-color: var(--color-primary);
+  color: #fff;
+  border: none;
+  padding: var(--small) var(--base);
+  border-radius: var(--rounded);
+  cursor: pointer;
+  transition: 150ms ease-in-out;
+}
+
+button:hover {
+  background-color: var(--color-primary-hover);
+  transform: translateY(-2px);
+}
+
+section {
+  margin: var(--base);
+  padding: var(--base);
+}
+
+header {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: var(--base);
+}
+
+button.status {
+  background-color: transparent;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+  font-family: var(--font-primary);
+  padding: 0.2rem 0.5rem;
+  font-size: 13px;
+}
+
+button.status:hover {
+  background-color: var(--color-primary);
+  color: #fff;
+  border-color: var(--color-primary);
+  transform: translateY(-2px);
+}
+
+button.status#in-progress {
+  background-color: transparent;
+  color: orange;
+  border: 2px solid orange;
+}
+
+button.status#done {
+  background-color: transparent;
+  color: green;
+  border: 2px solid green;
+}
+
+.board {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--base);
+  justify-content: center;
+}
+
+.card {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: var(--rounded);
+}
