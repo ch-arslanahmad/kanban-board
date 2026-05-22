@@ -133,10 +133,24 @@ button.status#in-progress {
   border: 2px solid orange;
 }
 
+button.status#in-progress:hover {
+  background-color: orange;
+  color: #fff;
+  border-color: orange;
+  transform: translateY(-2px);
+}
+
 button.status#done {
   background-color: transparent;
   color: green;
   border: 2px solid green;
+}
+
+button.status#done:hover {
+  background-color: green;
+  color: #fff;
+  border-color: green;
+  transform: translateY(-2px);
 }
 
 .board {
@@ -147,7 +161,23 @@ button.status#done {
 }
 
 .card {
+  
   background-color: white;
   padding: 1.5rem;
   border-radius: var(--rounded);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: 150ms ease-in-out;
+}
+
+.card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transform: translateY(-4px);
+}
+
+.card .content p,
+.card .content h3 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 0.5rem;
 }
