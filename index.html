@@ -38,6 +38,26 @@
           </div>
         </div>
       </section>
+
+      <dialog class="task-modal">
+        <form class="dialog-content" method="dialog">
+          <h2>Add Task</h2>
+
+          <fieldset class="input-section">
+            <label for="task-title"> Title </label>
+            <input type="text" id="task-title" required />
+            <label for="task-desc"> Description </label>
+            <textarea id="task-desc" rows="3"></textarea>
+          </fieldset>
+
+          <div class="modal-actions">
+            <button type="button" id="modal-cancel" class="btn-secondary">
+              Cancel
+            </button>
+            <button type="submit" id="modal-confirm" value="add">Add</button>
+          </div>
+        </form>
+      </dialog>
     </main>
     <script src="main.js"></script>
   </body>

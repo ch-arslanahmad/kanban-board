@@ -37,17 +37,57 @@ function toggleStatus(card_container) {
   statusBtn.id = statuses[nextIndex];
 }
 
-task = new Task();
-
-task.title = "NEW TASK";
-task.description = "This is a new task added to the board.";
-
-document.querySelector("button#add-task").addEventListener("click", () => {
-  addTask(task);
-});
-
 document.querySelectorAll(".status").forEach((button) => {
   button.addEventListener("click", (e) => {
     toggleStatus(e.target.parentElement);
   });
+});
+
+// e is the element clicked
+document.querySelector(".board").addEventListener("click", (e) => {
+  let statusBtn = e.target.closest("button.status");
+
+  if (statusBtn) {
+    toggleStatus(statusBtn.parentElement);
+  }
+});
+
+// --- Modal Logic ---
+
+const modal = document.querySelector(".task-modal");
+
+document.querySelector("button#add-task").addEventListener("click", () => {
+  modal.showModal();
+});
+
+document.getElementById("modal-cancel").addEventListener("click", () => {
+  modal.close();
+});
+
+modal.addEventListener("click", (e) => {
+  if (e.target === modal) modal.close();
+});
+
+// add this before model closing
+modal.addEventListener("close", () => {
+  if (modal.returnValue === "" || modal.returnValue === undefined) return;
+
+  const titleInput = document.getElementById("task-title");
+  const descInput = document.getElementById("task-desc");
+
+  const title = titleInput.value.trim();
+  const description = descInput.value.trim();
+
+  if (title === "" || description === "") {
+    return;
+  }
+
+  const task = new Task(title, description);
+
+  console.log(task);
+
+  addTask(task);
+
+  titleInput.value = "";
+  descInput.value = "";
 });
