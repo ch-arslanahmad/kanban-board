@@ -157,26 +157,26 @@ button.status:hover {
   transform: translateY(-2px);
 }
 
-button.status#in-progress {
+button.status[data-status="in-progress"] {
   background-color: transparent;
   color: orange;
   border: 2px solid orange;
 }
 
-button.status#in-progress:hover {
+button.status[data-status="in-progress"]:hover {
   background-color: orange;
   color: #fff;
   border-color: orange;
   transform: translateY(-2px);
 }
 
-button.status#done {
+button.status[data-status="done"] {
   background-color: transparent;
   color: green;
   border: 2px solid green;
 }
 
-button.status#done:hover {
+button.status[data-status="done"]:hover {
   background-color: green;
   color: #fff;
   border-color: green;
@@ -224,12 +224,23 @@ button.status#done:hover {
   justify-content: center;
 }
 
-.card {
+.column {
   background-color: white;
+  padding: var(--base);
+}
+
+.card {
+  background-color: var(--color-column-header-bg);
   padding: 1.5rem;
   border-radius: var(--rounded);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: 150ms ease-in-out;
+  cursor: grab; /* Show grab icon */
+}
+
+
+.dragging {
+  opacity: 0;
 }
 
 .card:hover {

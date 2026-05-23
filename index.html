@@ -24,42 +24,60 @@
 
     <main>
       <section class="board">
-        <div class="card">
-          <div class="card-header">
-            <button class="status" id="todo">todo</button>
-            <button class="card-delete" aria-label="Delete task">
-              <i class="fa-solid fa-trash"></i>
-            </button>
-          </div>
-          <div class="content">
-            <h3>Task Title</h3>
-            <p>Task description goes here.</p>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-header">
-            <button class="status" id="in-progress">in-progress</button>
-            <button class="card-delete" aria-label="Delete task">
-              <i class="fa-solid fa-trash"></i>
-            </button>
-          </div>
-          <div class="content">
-            <h3>Task Title</h3>
-            <p>Task description goes here.</p>
+        <!-- here data-* is a custom acceptable attribute, letting you to store extra info of an element -->
+        <div class="column" data-status="todo">
+          <h2>Todo</h2>
+          <div class="card-list">
+            <div class="card" draggable="true">
+              <div class="card-header">
+                <button class="status" data-status="todo">todo</button>
+                <button class="card-delete" aria-label="Delete task">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </div>
+              <div class="content">
+                <h3>Task Title</h3>
+                <p>Task description goes here.</p>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="card">
-          <div class="card-header">
-            <button class="status" id="done">done</button>
-            <button class="card-delete" aria-label="Delete task">
-              <i class="fa-solid fa-trash"></i>
-            </button>
+        <div class="column" data-status="in-progress">
+          <h2>In Progress</h2>
+          <div class="card-list">
+            <div class="card" draggable="true">
+              <div class="card-header">
+                <button class="status" data-status="in-progress">
+                  in-progress
+                </button>
+                <button class="card-delete" aria-label="Delete task">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </div>
+              <div class="content">
+                <h3>Task Title</h3>
+                <p>Task description goes here.</p>
+              </div>
+            </div>
           </div>
-          <div class="content">
-            <h3>Task Title</h3>
-            <p>Task description goes here.</p>
+        </div>
+
+        <div class="column" data-status="done">
+          <h2>Done</h2>
+          <div class="card-list">
+            <div class="card" draggable="true">
+              <div class="card-header">
+                <button class="status" data-status="done">done</button>
+                <button class="card-delete" aria-label="Delete task">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </div>
+              <div class="content">
+                <h3>Task Title</h3>
+                <p>Task description goes here.</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -95,6 +113,6 @@
         </form>
       </dialog>
     </main>
-    <script src="main.js"></script>
   </body>
+  <script src="main.js"></script>
 </html>
