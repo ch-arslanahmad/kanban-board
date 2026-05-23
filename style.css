@@ -97,11 +97,18 @@ button {
   border-radius: var(--round);
   cursor: pointer;
   transition: 150ms ease-in-out;
+  gap: 10px;
+  align-items: center;
 }
 
 button:hover {
   background-color: var(--color-primary-hover);
   transform: translateY(-2px);
+}
+
+button:disabled {
+  background-color: #94a3b8;
+  cursor: not-allowed;
 }
 
 input,
@@ -176,6 +183,40 @@ button.status#done:hover {
   transform: translateY(-2px);
 }
 
+.buttons {
+  display: flex;
+  gap: var(--small);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.card-delete {
+  background-color: transparent;
+  color: gray;
+  border: 1.5px solid grey;
+  padding: 0.3rem 0.5rem;
+  font-size: 0.8rem;
+  border-radius: var(--rounded);
+  transition: 150ms ease-in-out;
+  opacity: 0;
+}
+
+.card:hover .card-delete {
+  opacity: 1;
+}
+
+.card-delete:hover {
+  color: #ef4444;
+  border: 1.5px solid #ef4444;
+  background-color: transparent;
+  transform: translateY(-2px);
+}
+
 .board {
   display: flex;
   flex-wrap: wrap;
@@ -211,7 +252,6 @@ button.status#done:hover {
 }
 
 dialog[open].task-modal {
-  display: flex;
   justify-self: center; /* Aligns vertically */
   align-self: center; /* Aligns horizontally */
   border: 2px solid black;
@@ -220,6 +260,29 @@ dialog[open].task-modal {
 
 .dialog-content {
   padding: 10px;
+}
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.dialog-close {
+  background: transparent;
+  color: #94a3b8;
+  border: none;
+  padding: 0.3rem 0.5rem;
+  font-size: 1.2rem;
+  border-radius: var(--rounded);
+  transition: 150ms ease-in-out;
+}
+
+.dialog-close:hover {
+  background: #f1f5f9;
+  color: var(--color-text);
+  transform: translateY(-2px);
 }
 
 .inner-content {
@@ -243,4 +306,3 @@ fieldset {
   justify-content: flex-end;
   gap: var(--small);
 }
-

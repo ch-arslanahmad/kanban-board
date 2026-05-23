@@ -5,17 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Kanban Board</title>
     <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   </head>
   <body>
     <header>
-      <h1>Kanban Board</h1>
-      <button id="add-task">Add Task</button>
+      <h1>Kanban</h1>
+
+      <div class="buttons">
+        <button id="add-task">Add <i class="fa-solid fa-plus"></i></button>
+        <!--currently the undo button non-functional  -->
+        <button id="undo-task" disabled>
+          <i class="fa-solid fa-undo"></i>
+        </button>
+      </div>
     </header>
 
     <main>
       <section class="board">
         <div class="card">
-          <button class="status" id="todo">todo</button>
+          <div class="card-header">
+            <button class="status" id="todo">todo</button>
+            <button class="card-delete" aria-label="Delete task">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
           <div class="content">
             <h3>Task Title</h3>
             <p>Task description goes here.</p>
@@ -23,7 +38,12 @@
         </div>
 
         <div class="card">
-          <button class="status" id="in-progress">in-progress</button>
+          <div class="card-header">
+            <button class="status" id="in-progress">in-progress</button>
+            <button class="card-delete" aria-label="Delete task">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
           <div class="content">
             <h3>Task Title</h3>
             <p>Task description goes here.</p>
@@ -31,7 +51,12 @@
         </div>
 
         <div class="card">
-          <button class="status" id="done">done</button>
+          <div class="card-header">
+            <button class="status" id="done">done</button>
+            <button class="card-delete" aria-label="Delete task">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
           <div class="content">
             <h3>Task Title</h3>
             <p>Task description goes here.</p>
@@ -41,7 +66,16 @@
 
       <dialog class="task-modal">
         <form class="dialog-content" method="dialog">
-          <h2>Add Task</h2>
+          <div class="dialog-header">
+            <h2>Add Task</h2>
+            <button
+              type="button"
+              id="modal-close"
+              class="dialog-close"
+              aria-label="Close">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
 
           <fieldset class="input-section">
             <label for="task-title"> Title </label>
@@ -54,7 +88,9 @@
             <button type="button" id="modal-cancel" class="btn-secondary">
               Cancel
             </button>
-            <button type="submit" id="modal-confirm" value="add">Add</button>
+            <button type="submit" id="modal-confirm" value="add">
+              Add <i class="fa-solid fa-plus"></i>
+            </button>
           </div>
         </form>
       </dialog>

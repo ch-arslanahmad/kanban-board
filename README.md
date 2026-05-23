@@ -24,13 +24,13 @@ kanban-board/
 
 **Deliverables**:
 
-- [ ] Set up project structure (HTML, CSS, JS files)
-- [ ] Create 3-column board layout (To Do, In Progress, Done)
-- [ ] Implement add task functionality
-- [ ] Implement delete task functionality
+- [x] Set up project structure (HTML, CSS, JS files)
+- [x] Create 3-column board layout (To Do, In Progress, Done)
+- [x] Implement add task functionality
+- [x] Implement delete task functionality
 - [ ] Implement drag-and-drop between columns
-- [ ] Apply minimal, clean styling
-- [ ] Test all interactions
+- [x] Apply minimal, clean styling
+- [x] Test all interactions
 
 **Tech Stack**:
 

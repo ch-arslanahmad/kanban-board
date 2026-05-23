@@ -46,9 +46,14 @@ document.querySelectorAll(".status").forEach((button) => {
 // e is the element clicked
 document.querySelector(".board").addEventListener("click", (e) => {
   let statusBtn = e.target.closest("button.status");
+  let deleteBtn = e.target.closest("button.card-delete");
 
   if (statusBtn) {
     toggleStatus(statusBtn.parentElement);
+  }
+
+  if (deleteBtn) {
+    deleteBtn.closest(".card").remove();
   }
 });
 
@@ -61,6 +66,10 @@ document.querySelector("button#add-task").addEventListener("click", () => {
 });
 
 document.getElementById("modal-cancel").addEventListener("click", () => {
+  modal.close();
+});
+
+document.getElementById("modal-close").addEventListener("click", () => {
   modal.close();
 });
 
