@@ -1,31 +1,125 @@
+
 class Task {
   constructor(title = "", description = "", status = "todo") {
+    this.id = crypto.randomUUID(); // generate unique ID for each task
     this.title = title;
     this.description = description;
     this.status = status;
   }
 }
 
+// a wrapper class over localStorage to handle Task specific storage needs (like saving/loading tasks, etc.)
+class Storage {
+  static #key = "tasks"; // private field to store the key used for localStorage
+
+  static save(task) {
+    const tasks = Storage.load(); // load existing tasks
+    tasks.push(task); // add new task to the list
+    localStorage.setItem(this.#key, JSON.stringify(tasks));
+  }
+
+  static delete(taskId) {
+    const tasks = Storage.load();
+    const updatedTasks = tasks.filter((task) => task.id !== taskId); // remove the task with the given ID
+    localStorage.setItem(this.#key, JSON.stringify(updatedTasks)); // save the updated list back to localStorage
+  }
+
+  static update(taskId, updatedTask) {
+    const tasks = Storage.load();
+    const index = tasks.findIndex((task) => task.id === taskId); // find the index of the task to update
+    if (index !== -1) {
+      tasks[index] = { ...tasks[index], ...updatedTask }; // update the task with new values
+      localStorage.setItem(this.#key, JSON.stringify(tasks)); // save the updated list back to localStorage
+    }
+  }
+
+  static load() {
+    const tasks = localStorage.getItem(this.#key);
+    return tasks ? JSON.parse(tasks) : [];
+  }
+
+  static size() {
+    return Storage.load().length; // return the number of tasks stored in localStorage
+  }
+
+  static clear() {
+    localStorage.removeItem(this.#key);
+  }
+}
+
 const statuses = ["todo", "in-progress", "done"];
 
+
+
+
+
 // takes Task Object and adds to the board
-function addTask(task) {
-  console.log("Add Task button clicked");
-  const board = document.querySelector(".board");
 
-  const card = document.querySelector(".card").cloneNode(true);
+// load tasks from localStorage and add to the board on page load
 
-  card.querySelector("h3").textContent = task.title;
-  card.querySelector("p").textContent = task.description;
+document.addEventListener("DOMContentLoaded", () => {
+  if (!Storage.size()) {
+    // add when storage is empty (first time user) for demo purposes
+    const task1 = new Task("Task 1", "This is the first task");
+    const task2 = new Task("Task 2", "This is the second task", "in-progress");
+    const task3 = new Task("Task 3", "This is the third task", "done");
 
-  const statusBtn = card.querySelector("button.status");
+    Storage.save(task1);
+    Storage.save(task2);
+    Storage.save(task3);
+  }
 
+  const tasks = Storage.load();
+  tasks.forEach((task) => addTask(task));
+});
+
+function createCard(task) {
+  const card = document.createElement("div");
+  card.draggable = true; // make the card draggable
+  card.className = "card";
+  card.dataset.id = task.id; // store task ID in data attribute for reference
+
+  const header = document.createElement("div");
+  header.className = "card-header";
+
+  const statusBtn = document.createElement("button");
+  statusBtn.className = "status";
   statusBtn.textContent = task.status;
   statusBtn.setAttribute("data-status", task.status);
 
-  board
-    .querySelector(".column[data-status='" + task.status + "'] .card-list")
-    .appendChild(card); // add the card to the correct column based on status
+  header.appendChild(statusBtn);
+
+  const deleteBtn = document.createElement("button");
+  deleteBtn.className = "card-delete";
+  const icon = document.createElement("i");
+  icon.className = "fa-solid fa-trash";
+
+  deleteBtn.appendChild(icon); // add icon to the delete button
+  header.appendChild(deleteBtn);
+
+  const content = document.createElement("div");
+  content.className = "content";
+
+  const h3 = document.createElement("h3");
+  h3.textContent = task.title;
+
+  const p = document.createElement("p");
+  p.textContent = task.description;
+
+  content.appendChild(h3);
+  content.appendChild(p);
+
+  card.appendChild(header); // add header
+  card.appendChild(content); // add content
+
+  const targetList = document.querySelector(
+    `.column[data-status="${task.status}"] .card-list`,
+  );
+  targetList.appendChild(card);
+}
+
+function addTask(task) {
+  createCard(task);
 }
 
 // adds Card with FLIP (First, Last, Invert, Play) animation technique to animate card movement
@@ -34,14 +128,15 @@ function addTask(task) {
 function animateCard(
   card,
   targetColumn,
-  startX = null, // optional args for cursor-based animation
-  startY = null,
+  startX = "", // optional args for cursor-based animation
+  startY = "",
 ) {
   const targetList = targetColumn.querySelector(".card-list");
 
   let deltaX, deltaY;
 
-  if (startX !== null && startY !== null) {
+  if (startX && startY) {
+    // ... if position is provided
     // Cursor-based: "First" is the cursor position (for DnD, D drop)
     // ? DnD stands for "drag and drop"
 
@@ -67,14 +162,11 @@ function animateCard(
   card.style.transform = `translate(${deltaX}px, ${deltaY}px)`; // Invert: place at old position
 
   // Play
-  requestAnimationFrame(() => {
-    // wait for frame 1 to commit
+  // wait for frame 1 to commit
 
-    requestAnimationFrame(() => {
-      card.style.transition =
-        "transform 400ms cubic-bezier(0.34, 1.56, 0.64, 1)"; // add transition for the animation
-      card.style.transform = ""; // animate back to the original position
-    });
+  requestAnimationFrame(() => {
+    card.style.transition = "transform 400ms cubic-bezier(0.34, 1.56, 0.64, 1)"; // add transition for the animation
+    card.style.transform = ""; // animate back to the original position
   });
 
   card.addEventListener(
@@ -103,18 +195,31 @@ function toggleStatus(card_container) {
     console.log("Invalid Value");
     return;
   }
+
+  // ** Posibilities
+  // Posibility#1: todo (1) -> in-progress(2)
+  // Posibility#2: in-progress (2) -> done(3)
+  // Posibility#3: done (3) -> todo(1)
+  // possible via formula
+  // nextIndex = (currentIndex + 1) % statuses.length
+  // #1: (0 + 1) % 3 = 2
+  // #2: (1 + 1) % 3 = 2
+  // #3: (2 + 1) % 3 = 0
+
   const nextIndex = (currentIndex + 1) % statuses.length;
 
   const targetColumn = document.querySelector(
     ".column[data-status='" + statuses[nextIndex] + "']",
   );
 
+  // update status text and data attribute
   statusBtn.textContent = statuses[nextIndex];
   statusBtn.setAttribute("data-status", statuses[nextIndex]);
 
   // move the card to the correct column
 
   const card = statusBtn.closest(".card");
+  Storage.update(card.dataset.id, { status: statuses[nextIndex] });
 
   if (targetColumn) {
     // update: added check to prevent errors if target column is not found
@@ -132,7 +237,9 @@ document.querySelector(".board").addEventListener("click", (e) => {
   }
 
   if (deleteBtn) {
-    deleteBtn.closest(".card").remove();
+    let card = deleteBtn.closest(".card");
+    Storage.delete(card.dataset.id); // delete from storage using the card's data-id
+    card.remove();
   }
 });
 
@@ -172,8 +279,7 @@ modal.addEventListener("close", () => {
 
   const task = new Task(title, description);
 
-  console.log(task);
-
+  Storage.save(task);
   addTask(task);
 
   titleInput.value = "";
@@ -211,4 +317,5 @@ document.querySelector(".board").addEventListener("drop", (e) => {
   const newStatus = targetColumn.getAttribute("data-status");
   statusBtn.textContent = newStatus;
   statusBtn.setAttribute("data-status", newStatus);
+  Storage.update(draggedCard.dataset.id, { status: newStatus });
 });
