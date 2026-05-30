@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Kanban Board</title>
+    <link rel="icon" type="image/png" href="logo-transparent.png" />
     <link rel="stylesheet" href="style.css" />
     <link
       rel="stylesheet"
@@ -11,7 +12,8 @@
   </head>
   <body>
     <header>
-      <h1>Kanban</h1>
+      <img src="logo-transparent.png" alt="Kanban Board logo" height="100" />
+      <!-- <h1>Kanban</h1> -->
 
       <div class="buttons">
         <button id="add-task">Add <i class="fa-solid fa-plus"></i></button>
@@ -28,56 +30,21 @@
         <div class="column" data-status="todo">
           <h2>Todo</h2>
           <div class="card-list">
-            <div class="card" draggable="true">
-              <div class="card-header">
-                <button class="status" data-status="todo">todo</button>
-                <button class="card-delete" aria-label="Delete task">
-                  <i class="fa-solid fa-trash"></i>
-                </button>
-              </div>
-              <div class="content">
-                <h3>Task Title</h3>
-                <p>Task description goes here.</p>
-              </div>
-            </div>
+            <!-- dynamically populated -->
           </div>
         </div>
 
         <div class="column" data-status="in-progress">
           <h2>In Progress</h2>
           <div class="card-list">
-            <div class="card" draggable="true">
-              <div class="card-header">
-                <button class="status" data-status="in-progress">
-                  in-progress
-                </button>
-                <button class="card-delete" aria-label="Delete task">
-                  <i class="fa-solid fa-trash"></i>
-                </button>
-              </div>
-              <div class="content">
-                <h3>Task Title</h3>
-                <p>Task description goes here.</p>
-              </div>
-            </div>
+            <!-- dynamically populated -->
           </div>
         </div>
 
         <div class="column" data-status="done">
           <h2>Done</h2>
           <div class="card-list">
-            <div class="card" draggable="true">
-              <div class="card-header">
-                <button class="status" data-status="done">done</button>
-                <button class="card-delete" aria-label="Delete task">
-                  <i class="fa-solid fa-trash"></i>
-                </button>
-              </div>
-              <div class="content">
-                <h3>Task Title</h3>
-                <p>Task description goes here.</p>
-              </div>
-            </div>
+            <!-- dynamically populated -->
           </div>
         </div>
       </section>

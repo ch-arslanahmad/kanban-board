@@ -28,7 +28,7 @@ kanban-board/
 - [x] Create 3-column board layout (To Do, In Progress, Done)
 - [x] Implement add task functionality
 - [x] Implement delete task functionality
-- [ ] Implement drag-and-drop between columns
+- [x] Implement drag-and-drop between columns
 - [x] Apply minimal, clean styling
 - [x] Test all interactions
 
