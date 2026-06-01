@@ -35,4 +35,11 @@ export class Storage {
   static clear() {
     localStorage.removeItem(this.#key);
   }
+
+  static overwrite(tasks) {
+    localStorage.setItem(this.#key, JSON.stringify(tasks));
+  }
 }
+
+// expose for console debugging
+window.Storage = Storage;

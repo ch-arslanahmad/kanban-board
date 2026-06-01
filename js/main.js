@@ -1,28 +1,8 @@
-import { Storage } from "./storage.js";
-
-document.addEventListener("click", (e) => {
-  if (e.target.matches("p")) {
-    const p = e.target;
-    const input = document.createElement("input");
-
-    input.value = p.textContent;
-    input.className = "edit-input";
-
-    p.replaceWith(input);
-    input.focus();
-
-    // input.addEventListener("blur", () => {
-    //   const newP = document.createElement("p");
-    //   newP.textContent = input.value;
-
-    //   input.replaceWith(newP);
-    // });
-  }
-});
+import { TaskManager } from "./task-manager.js";
 
 class Task {
   constructor(title = "", description = "", status = "todo") {
-    this.id = crypto.randomUUID(); // generate unique ID for each task
+    this.id = crypto.randomUUID();
     this.title = title;
     this.description = description;
     this.status = status;
@@ -30,26 +10,6 @@ class Task {
 }
 
 const statuses = ["todo", "in-progress", "done"];
-
-// takes Task Object and adds to the board
-
-// load tasks from localStorage and add to the board on page load
-
-document.addEventListener("DOMContentLoaded", () => {
-  if (!Storage.size()) {
-    // add when storage is empty (first time user) for demo purposes
-    const task1 = new Task("Task 1", "This is the first task");
-    const task2 = new Task("Task 2", "This is the second task", "in-progress");
-    const task3 = new Task("Task 3", "This is the third task", "done");
-
-    Storage.save(task1);
-    Storage.save(task2);
-    Storage.save(task3);
-  }
-
-  const tasks = Storage.load();
-  tasks.forEach((task) => addTask(task));
-});
 
 function createCard(task) {
   const card = document.createElement("div");
@@ -80,9 +40,27 @@ function createCard(task) {
 
   const h3 = document.createElement("h3");
   h3.textContent = task.title;
+  h3.contentEditable = true;
+  h3.addEventListener("blur", () => {
+    const text = h3.textContent.trim();
+    if (text !== "") {
+      manager.update(card.dataset.id, { title: text });
+      updateUndoButton();
+    }
+  });
 
   const p = document.createElement("p");
   p.textContent = task.description;
+  p.contentEditable = true;
+  p.addEventListener("blur", () => {
+    const text = p.textContent.trim();
+    if (text === "") {
+      p.textContent = task.description;
+    } else {
+      manager.update(card.dataset.id, { description: text });
+      updateUndoButton();
+    }
+  });
 
   content.appendChild(h3);
   content.appendChild(p);
@@ -100,78 +78,58 @@ function addTask(task) {
   createCard(task);
 }
 
-// adds Card with FLIP (First, Last, Invert, Play) animation technique to animate card movement
-// pass startX/startY (cursor position) to animate in from cursor (for DnD drop)
-// omit them for standard FLIP from old DOM position (for toggleStatus)
-function animateCard(
-  card,
-  targetColumn,
-  startX = "", // optional args for cursor-based animation
-  startY = "",
-) {
-  const targetList = targetColumn.querySelector(".card-list");
+function flip(el, fromRect, toRect) {
+  const dx = fromRect.left - toRect.left;
+  const dy = fromRect.top - toRect.top;
+  if (dx === 0 && dy === 0) return;
 
-  let deltaX, deltaY;
-
-  if (startX && startY) {
-    // ... if position is provided
-    // Cursor-based: "First" is the cursor position (for DnD, D drop)
-    // ? DnD stands for "drag and drop"
-
-    targetList.appendChild(card); // Last
-    const endRect = card.getBoundingClientRect();
-    deltaX = startX - endRect.left; // Invert
-    deltaY = startY - endRect.top; // Invert
-  } else {
-    // First
-    const oldRect = card.getBoundingClientRect();
-    // Last
-    targetList.appendChild(card);
-    // Invert
-    const newRect = card.getBoundingClientRect();
-    deltaX = oldRect.left - newRect.left;
-    deltaY = oldRect.top - newRect.top;
-  }
-
-  if (deltaX === 0 && deltaY === 0) return; // if the card is in the correct position, no need to animate
-
-  card.style.transition = "transform 0s"; // disable transition for the initial transform
-
-  card.style.transform = `translate(${deltaX}px, ${deltaY}px)`; // Invert: place at old position
-
-  // Play
-  // wait for frame 1 to commit
+  el.style.transition = "none";
 
   requestAnimationFrame(() => {
-    card.style.transition = "transform 400ms cubic-bezier(0.34, 1.56, 0.64, 1)"; // add transition for the animation
-    card.style.transform = ""; // animate back to the original position
+    el.style.transform = `translate(${dx}px, ${dy}px)`; // Jump to starting position
+
+    requestAnimationFrame(() => {
+      el.style.transition = "transform 400ms cubic-bezier(0.34, 1.56, 0.64, 1)";
+      el.style.transform = ""; // Animate back to final position
+    });
   });
 
-  card.addEventListener(
+  el.addEventListener(
     "transitionend",
     () => {
-      card.style.transition = ""; // clean up transition after animation
+      el.style.transition = "";
     },
     { once: true },
-  ); // ensure the event listener is removed after it runs once
-
-  card.addEventListener(
+  );
+  el.addEventListener(
     "transitioncancel",
     () => {
-      card.style.transition = ""; // clean up transition after animation
+      el.style.transition = "";
     },
     { once: true },
   );
 }
 
+function animateCard(card, targetColumn, startX = "", startY = "") {
+  const targetList = targetColumn.querySelector(".card-list");
+  const fromRect =
+    startX !== "" && startY !== ""
+      ? { left: startX, top: startY }
+      : card.getBoundingClientRect();
+
+  targetList.appendChild(card);
+  const toRect = card.getBoundingClientRect();
+
+  flip(card, fromRect, toRect);
+}
+
 function removeCard(taskId) {
   const card = document.querySelector(`.card[data-id="${taskId}"]`);
-  card.remove();
+  if (card) card.remove();
 }
 
 function toggleStatus(card_container) {
   const statusBtn = card_container.querySelector("button.status");
-
   const currentIndex = statuses.indexOf(statusBtn.getAttribute("data-status"));
 
   if (currentIndex === -1) {
@@ -190,27 +148,43 @@ function toggleStatus(card_container) {
   // #3: (2 + 1) % 3 = 0
 
   const nextIndex = (currentIndex + 1) % statuses.length;
-
   const targetColumn = document.querySelector(
     ".column[data-status='" + statuses[nextIndex] + "']",
   );
 
-  // update status text and data attribute
   statusBtn.textContent = statuses[nextIndex];
   statusBtn.setAttribute("data-status", statuses[nextIndex]);
 
-  // move the card to the correct column
-
   const card = statusBtn.closest(".card");
-  Storage.update(card.dataset.id, { status: statuses[nextIndex] });
+  manager.update(card.dataset.id, { status: statuses[nextIndex] });
+  updateUndoButton();
 
   if (targetColumn) {
-    // update: added check to prevent errors if target column is not found
     animateCard(card, targetColumn);
   }
 }
 
-// e is the element clicked
+const manager = new TaskManager();
+
+document.addEventListener("DOMContentLoaded", () => {
+  const tasks = manager.loadAll();
+  if (tasks.length > 0) {
+    tasks.forEach((t) => addTask(t));
+    return;
+  }
+
+  [
+    new Task("Task 1", "This is the first task"),
+    new Task("Task 2", "This is the second task", "in-progress"),
+    new Task("Task 3", "This is the third task", "done"),
+  ].forEach((t) => {
+    manager.add(t);
+    addTask(t);
+  });
+
+  updateUndoButton();
+});
+
 document.querySelector(".board").addEventListener("click", (e) => {
   let statusBtn = e.target.closest("button.status");
   let deleteBtn = e.target.closest("button.card-delete");
@@ -221,8 +195,9 @@ document.querySelector(".board").addEventListener("click", (e) => {
 
   if (deleteBtn) {
     let card = deleteBtn.closest(".card");
-    Storage.delete(card.dataset.id); // delete from storage using the card's data-id
-    card.remove();
+    manager.delete(card.dataset.id);
+    removeCard(card.dataset.id);
+    updateUndoButton();
   }
 });
 
@@ -246,7 +221,6 @@ modal.addEventListener("click", (e) => {
   if (e.target === modal) modal.close();
 });
 
-// add this before model closing
 modal.addEventListener("close", () => {
   if (modal.returnValue === "" || modal.returnValue === undefined) return;
 
@@ -261,9 +235,9 @@ modal.addEventListener("close", () => {
   }
 
   const task = new Task(title, description);
-
-  Storage.save(task);
+  manager.add(task);
   addTask(task);
+  updateUndoButton();
 
   titleInput.value = "";
   descInput.value = "";
@@ -300,5 +274,24 @@ document.querySelector(".board").addEventListener("drop", (e) => {
   const newStatus = targetColumn.getAttribute("data-status");
   statusBtn.textContent = newStatus;
   statusBtn.setAttribute("data-status", newStatus);
-  Storage.update(draggedCard.dataset.id, { status: newStatus });
+  manager.update(draggedCard.dataset.id, { status: newStatus });
+  updateUndoButton();
 });
+
+document.getElementById("undo-task").addEventListener("click", () => {
+  const state = manager.undo();
+  if (!state) return;
+  document.querySelectorAll(".card-list").forEach((l) => (l.innerHTML = ""));
+  state.forEach((t) => addTask(t));
+  updateUndoButton();
+});
+
+function updateUndoButton() {
+  document.getElementById("undo-task").disabled = !manager.canUndo;
+}
+
+updateUndoButton();
+
+// expose for console debugging
+window.Task = Task;
+window.manager = manager;
