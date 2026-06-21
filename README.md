@@ -2,6 +2,14 @@
 
 A progressive web development project built with vanilla HTML, CSS, and JavaScript. Starting from basics and iterating toward a polished, feature-rich task management tool.
 
+https://github.com/user-attachments/assets/5d887d8e-a09f-4f85-9283-ea86dd3e74e8
+
+Undo feature preview,
+
+
+https://github.com/user-attachments/assets/f45d9331-8c96-4e69-b479-9d08afd93393
+
+
 ## Purpose
 
 This project is for learning core web development fundamentals through building a real, usable application. Each phase builds on the previous, introducing new concepts and improving the overall experience.
