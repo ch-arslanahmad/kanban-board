@@ -1,4 +1,8 @@
+
 # Kanban Board
+
+
+<img width="649" height="288" alt="kanban-board-initial" src="https://github.com/user-attachments/assets/f6448343-e8d0-439a-b30b-5423d065d71c" />
 
 A progressive web development project built with vanilla HTML, CSS, and JavaScript. Starting from basics and iterating toward a polished, feature-rich task management tool.
 
